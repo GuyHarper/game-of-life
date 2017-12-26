@@ -11,6 +11,6 @@ div.square {
   border: 1px solid #333;
 }
 
-div.active {
+div.alive {
   background-color: #333;
 }

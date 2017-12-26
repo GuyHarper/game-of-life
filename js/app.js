@@ -3,14 +3,15 @@ $(() => {
   const config = {
     numberOfColumns: 10,
     numberOfSquares: 100,
-    activeSquares: [28, 37, 39]
+    activeSquares: [28, 37, 39],
+    nextRoundActiveSquares: []
   };
   const neighbourDifferences = [1, config.numberOfColumns, config.numberOfColumns + 1, config.numberOfColumns - 1];
 
   function setup() {
     for(let i = 0; i < config.numberOfSquares; i++) {
       let activeSignifier = '';
-      if(config.activeSquares.includes(i)) activeSignifier = ' active';
+      if(config.activeSquares.includes(i)) activeSignifier = ' alive';
       const element = `<div class="square${activeSignifier}" id=${i}></div>`;
       $('main').append(element);
     }
@@ -26,11 +27,11 @@ $(() => {
       }
     },0);
     if(config.activeSquares.includes(squareId)) {
-      if(numberOfActiveNeighbours > 3 || numberOfActiveNeighbours < 2) {
-        config.activeSquares.splice(config.activeSquares.indexOf(squareId), 1);
+      if(numberOfActiveNeighbours <= 3 && numberOfActiveNeighbours >= 2) {
+        config.nextRoundActiveSquares.push(squareId);
       }
     } else if (numberOfActiveNeighbours === 3) {
-      config.activeSquares.push(squareId);
+      config.nextRoundActiveSquares.push(squareId);
     }
   }
 
@@ -44,19 +45,30 @@ $(() => {
   }
 
   setup();
-  setInterval(() => {
+  const intervalId = setInterval(() => {
     const squaresToCheck = [];
     config.activeSquares.forEach((square) => {
+      $(`#${square}`).removeClass('alive');
       squaresToCheck.push(square);
       const surroundingSquares = identifySurroundingSquares(square);
       surroundingSquares.forEach((square) => {
         squaresToCheck.push(square);
       });
     });
-    const uniques = squaresToCheck.filter((element, index) => {
+    const uniqueSquaresToCheck = squaresToCheck.filter((element, index) => {
       return squaresToCheck.indexOf(element) === index;
     });
-    console.log(uniques);
-  },1000);
+    uniqueSquaresToCheck.forEach((square) => {
+      checkNeighbours(square);
+    });
+    config.activeSquares = config.nextRoundActiveSquares;
+    config.activeSquares.forEach((square) => {
+      $(`#${square}`).addClass('alive');
+    });
+    config.nextRoundActiveSquares = [];
+    if(config.activeSquares.length === 0) {
+      clearInterval(intervalId);
+    }
+  },500);
 
 });
