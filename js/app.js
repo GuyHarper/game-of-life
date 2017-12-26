@@ -1,14 +1,15 @@
 $(() => {
 
   const config = {
-    numberOfColumns: 10,
-    numberOfSquares: 100,
-    activeSquares: [28, 37, 39],
+    numberOfColumns: 100,
+    numberOfSquares: 1000,
+    activeSquares: [24, 27, 33],
     nextRoundActiveSquares: []
   };
   const neighbourDifferences = [1, config.numberOfColumns, config.numberOfColumns + 1, config.numberOfColumns - 1];
 
   function setup() {
+    $('main').css('width', `${config.numberOfColumns * 12}`);
     for(let i = 0; i < config.numberOfSquares; i++) {
       let activeSignifier = '';
       if(config.activeSquares.includes(i)) activeSignifier = ' alive';
@@ -69,6 +70,6 @@ $(() => {
     if(config.activeSquares.length === 0) {
       clearInterval(intervalId);
     }
-  },500);
+  },300);
 
 });
