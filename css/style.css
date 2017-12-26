@@ -1,0 +1,16 @@
+main {
+  display: flex;
+  flex-wrap: wrap;
+  width: 120px;
+  height: 120px;
+}
+
+div.square {
+  width: 10px;
+  height: 10px;
+  border: 1px solid #333;
+}
+
+div.active {
+  background-color: #333;
+}
