@@ -32,6 +32,12 @@ footer {
   justify-content: center;
 }
 
+div.buttons-container {
+  display: flex;
+  width: 250px;
+  justify-content: space-between;
+}
+
 button {
   height: 40px;
   font-size: 16px;

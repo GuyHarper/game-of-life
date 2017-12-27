@@ -1,7 +1,8 @@
 $(() => {
 
   const $main = $('main');
-  const $button = $('button');
+  const $startStopButton = $('button.start');
+  const $resetButton = $('button.reset');
   const config = {
     squareSize: 10
   };
@@ -79,26 +80,35 @@ $(() => {
       if(aliveSquares.length === 0) {
         clearInterval(intervalId);
         running = false;
-        $button.text('Start');
+        $startStopButton.text('Start');
       }
     },200);
   }
 
-  $button.on('click', () => {
+  $startStopButton.on('click', () => {
     if (running) {
       clearInterval(intervalId);
-      $button.text('Start');
+      $startStopButton.text('Start');
       running = false;
     } else {
       runLife();
-      $button.text('Stop');
+      $startStopButton.text('Stop');
       running = true;
     }
   });
 
+  $resetButton.on('click', () => {
+    clearInterval(intervalId);
+    $startStopButton.text('Start');
+    running = false;
+    aliveSquares.forEach((squareId) => {
+      $(`#${squareId}`).removeClass('alive');
+    });
+    aliveSquares = [];
+    nextRoundAliveSquares = [];
+  });
+
   $main.on('click', '.square', (e) => {
-    console.log(e.target.id);
-    console.log(config.numberOfColumns);
     if (aliveSquares.includes(parseInt(e.target.id))) {
       aliveSquares.splice(aliveSquares.indexOf(parseInt(e.target.id)), 1);
       $(e.target).removeClass('alive');
