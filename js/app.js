@@ -94,8 +94,13 @@ $(() => {
   });
 
   $main.on('click', '.square', (e) => {
-    aliveSquares.push(e.target.id);
-    $(e.target).addClass('alive');
+    if (aliveSquares.includes(parseInt(e.target.id))) {
+      aliveSquares.splice(aliveSquares.indexOf(parseInt(e.target.id)), 1);
+      $(e.target).removeClass('alive');
+    } else {
+      aliveSquares.push(parseInt(e.target.id));
+      $(e.target).addClass('alive');
+    }
   });
 
 });
