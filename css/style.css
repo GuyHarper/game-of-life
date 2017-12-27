@@ -1,10 +1,15 @@
-header {
-  background-color: #fafafa;
+html, body {
+  margin: 0;
+  overflow: hidden;
+  height: 100vh;
+  color: #333;
 }
 
 main {
   display: flex;
   flex-wrap: wrap;
+  height: 90vh;
+  margin: -8px;
 }
 
 div.square {
@@ -15,4 +20,31 @@ div.square {
 
 div.alive {
   background-color: #333;
+}
+
+footer {
+  top: 90vh;
+  height: calc(10vh + 16px);
+  width: 100%;
+  background-color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button {
+  height: 40px;
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  background-color: #fafafa;
+  width: 100px;
+  border-radius: 3px;
+}
+
+button:active {
+  background-color: #ccc;
+}
+
+button:focus {
+  outline: 0;
 }

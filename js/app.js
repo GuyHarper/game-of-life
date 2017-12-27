@@ -3,16 +3,19 @@ $(() => {
   const $main = $('main');
   const $button = $('button');
   const config = {
-    numberOfColumns: 100,
-    numberOfSquares: 1000
+    squareSize: 10
   };
-  let aliveSquares = [124, 224, 324];
+  let aliveSquares = [];
   let nextRoundAliveSquares = [];
-  const neighbourDifferences = [1, config.numberOfColumns, config.numberOfColumns + 1, config.numberOfColumns - 1];
+  let neighbourDifferences = [];
   let running = false;
   let intervalId = null;
 
   function setup() {
+    config.numberOfColumns = Math.floor(window.innerWidth / (config.squareSize + 2)) + 2;
+    config.numberOfRows = Math.floor(0.9 * window.innerHeight / (config.squareSize + 2)) + 2;
+    config.numberOfSquares = config.numberOfColumns * config.numberOfRows;
+    neighbourDifferences = [1, config.numberOfColumns, config.numberOfColumns + 1, config.numberOfColumns - 1];
     $main.css('width', `${config.numberOfColumns * 12}`);
     for(let i = 0; i < config.numberOfSquares; i++) {
       let aliveSignifier = '';
@@ -94,6 +97,8 @@ $(() => {
   });
 
   $main.on('click', '.square', (e) => {
+    console.log(e.target.id);
+    console.log(config.numberOfColumns);
     if (aliveSquares.includes(parseInt(e.target.id))) {
       aliveSquares.splice(aliveSquares.indexOf(parseInt(e.target.id)), 1);
       $(e.target).removeClass('alive');
