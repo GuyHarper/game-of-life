@@ -1,28 +1,29 @@
 $(() => {
 
+  const $main = $('main');
   const $button = $('button');
   const config = {
     numberOfColumns: 100,
-    numberOfSquares: 1000,
-    activeSquares: [124, 224, 324],
-    nextRoundActiveSquares: []
+    numberOfSquares: 1000
   };
+  let aliveSquares = [124, 224, 324];
+  let nextRoundAliveSquares = [];
   const neighbourDifferences = [1, config.numberOfColumns, config.numberOfColumns + 1, config.numberOfColumns - 1];
   let running = false;
   let intervalId = null;
 
   function setup() {
-    $('main').css('width', `${config.numberOfColumns * 12}`);
+    $main.css('width', `${config.numberOfColumns * 12}`);
     for(let i = 0; i < config.numberOfSquares; i++) {
-      let activeSignifier = '';
-      if(config.activeSquares.includes(i)) activeSignifier = ' alive';
-      const element = `<div class="square${activeSignifier}" id=${i}></div>`;
-      $('main').append(element);
+      let aliveSignifier = '';
+      if(aliveSquares.includes(i)) aliveSignifier = ' alive';
+      const element = `<div class="square${aliveSignifier}" id=${i}></div>`;
+      $main.append(element);
     }
   }
 
   function checkNeighbours(squareId) {
-    const numberOfActiveNeighbours = config.activeSquares.reduce((accumulator, currentSquareId) => {
+    const numberOfAliveNeighbours = aliveSquares.reduce((accumulator, currentSquareId) => {
       const difference = Math.abs(squareId - currentSquareId);
       if(neighbourDifferences.includes(difference)) {
         return accumulator + 1;
@@ -30,12 +31,12 @@ $(() => {
         return accumulator;
       }
     },0);
-    if(config.activeSquares.includes(squareId)) {
-      if(numberOfActiveNeighbours <= 3 && numberOfActiveNeighbours >= 2) {
-        config.nextRoundActiveSquares.push(squareId);
+    if(aliveSquares.includes(squareId)) {
+      if(numberOfAliveNeighbours <= 3 && numberOfAliveNeighbours >= 2) {
+        nextRoundAliveSquares.push(squareId);
       }
-    } else if (numberOfActiveNeighbours === 3) {
-      config.nextRoundActiveSquares.push(squareId);
+    } else if (numberOfAliveNeighbours === 3) {
+      nextRoundAliveSquares.push(squareId);
     }
   }
 
@@ -53,7 +54,7 @@ $(() => {
   function runLife() {
     intervalId = setInterval(() => {
       const squaresToCheck = [];
-      config.activeSquares.forEach((square) => {
+      aliveSquares.forEach((square) => {
         $(`#${square}`).removeClass('alive');
         squaresToCheck.push(square);
         const surroundingSquares = identifySurroundingSquares(square);
@@ -67,13 +68,14 @@ $(() => {
       uniqueSquaresToCheck.forEach((square) => {
         checkNeighbours(square);
       });
-      config.activeSquares = config.nextRoundActiveSquares;
-      config.activeSquares.forEach((square) => {
+      aliveSquares = nextRoundAliveSquares;
+      aliveSquares.forEach((square) => {
         $(`#${square}`).addClass('alive');
       });
-      config.nextRoundActiveSquares = [];
-      if(config.activeSquares.length === 0) {
+      nextRoundAliveSquares = [];
+      if(aliveSquares.length === 0) {
         clearInterval(intervalId);
+        running = false;
         $button.text('Start');
       }
     },200);
@@ -89,6 +91,11 @@ $(() => {
       $button.text('Stop');
       running = true;
     }
+  });
+
+  $main.on('click', '.square', (e) => {
+    aliveSquares.push(e.target.id);
+    $(e.target).addClass('alive');
   });
 
 });
